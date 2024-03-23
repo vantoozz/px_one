@@ -13,6 +13,9 @@ PLAYER_MOVEMENT_SPEED = 5
 GRAVITY = 0.5
 PLAYER_JUMP_SPEED = 10
 
+SPRITE_SCALING = .4
+BACKGROUND_RISE_AMOUNT = 20
+
 
 class Game(arcade.Window):
     def __init__(self):
@@ -23,6 +26,8 @@ class Game(arcade.Window):
         self.player_sprite = None
         self.physics_engine = None
         self.camera = None
+
+        self.backgrounds = arcade.SpriteList()
 
         self.collect_coin_sound = arcade.load_sound(":resources:sounds/coin1.wav")
         self.jump_sound = arcade.load_sound(":resources:sounds/jump1.wav")
@@ -46,7 +51,7 @@ class Game(arcade.Window):
             },
         }
 
-        self.tile_map = arcade.load_tilemap(map_name, layer_options=layer_options)
+        self.tile_map = arcade.load_tilemap(map_name, scaling=1, layer_options=layer_options)
 
         self.scene = arcade.Scene.from_tilemap(self.tile_map)
         self.player_sprite = Player.PlayerCharacter("assets/tiles/player-sheet.png")
@@ -55,14 +60,43 @@ class Game(arcade.Window):
         self.scene.add_sprite("Player", self.player_sprite)
         self.scene.move_sprite_list_before("Player", "Foreground")
 
+
         self.physics_engine = arcade.PhysicsEnginePlatformer(
             self.player_sprite, gravity_constant=GRAVITY, walls=self.scene["Platforms"]
         )
 
+        """ Set up the game variables. Call to re-start the game. """
+        # Create your sprites and sprite lists here
+        images = (
+            "assets/bg/_05_hill1.png",
+            "assets/bg/_04_bushes.png",
+            "assets/bg/_03_distant_trees.png",
+
+        )
+
+        rise = BACKGROUND_RISE_AMOUNT * SPRITE_SCALING
+
+        for count, image in enumerate(images):
+            bottom = rise * (len(images) - count - 1)
+
+            sprite = arcade.Sprite(image, scale=SPRITE_SCALING)
+            sprite.bottom = bottom
+            sprite.left = 0
+            self.backgrounds.append(sprite)
+
+            sprite = arcade.Sprite(image, scale=SPRITE_SCALING)
+            sprite.bottom = bottom
+            sprite.left = sprite.width
+            self.backgrounds.append(sprite)
+
+        self.scene.add_sprite_list("Parallax", use_spatial_hash=False, sprite_list=self.backgrounds)
+        self.scene.move_sprite_list_before("Parallax", "Background")
+        self.scene.move_sprite_list_before("Parallax", "Platforms")
+
     def on_draw(self):
         self.clear()
         self.camera.use()
-        self.scene.draw()
+        self.scene.draw(pixelated=True)
 
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed."""
@@ -116,6 +150,16 @@ class Game(arcade.Window):
 
         # Position the camera
         self.center_camera_to_player()
+
+        camera_x = self.camera.position[0]
+
+        for count, sprite in enumerate(self.backgrounds):
+            layer = count // 2
+            frame = count % 2
+            offset = camera_x / (2 ** (layer + 1))
+            jump = (camera_x - offset) // sprite.width
+            final_offset = offset + (jump + frame) * sprite.width
+            sprite.left = final_offset
 
 
 def main():

@@ -10,7 +10,7 @@ class PlayerCharacter(arcade.Sprite):
         sprite_sheet = arcade.load_texture(file_name)
         tile_size = sprite_sheet.height
 
-        super().__init__(file_name, image_width=tile_size, image_height=tile_size)
+        super().__init__(file_name, scale=1, image_width=tile_size, image_height=tile_size)
 
         self.time = 0
         self.frames = []
