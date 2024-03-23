@@ -1,0 +1,32 @@
+{
+    "activeFile": "",
+    "automapping.whileDrawing": false,
+    "expandedProjectPaths": [
+    ],
+    "fileStates": {
+        ":/automap-tiles.tsx": {
+            "scaleInDock": 1
+        },
+        "tiles/level_1.tmx": {
+            "scale": 0.8273,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 1266.7714251178531,
+                "y": 292.5178290825577
+            }
+        }
+    },
+    "last.imagePath": "/Users/ivan.nikitin/PycharmProjects/px_one/assets/tiles",
+    "openFiles": [
+    ],
+    "project": "px_one.tiled-project",
+    "recentFiles": [
+        "tiles/level_1.tmx"
+    ],
+    "resizeMap.removeObjects": false,
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 24,
+        "width": 24
+    }
+}
