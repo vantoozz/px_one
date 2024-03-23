@@ -9,7 +9,7 @@ class PlayerCharacter(arcade.Sprite):
     def __init__(self, file_name):
         sprite_sheet = arcade.load_texture(file_name)
         tile_size = sprite_sheet.height
-        # Set up parent class
+
         super().__init__(file_name, image_width=tile_size, image_height=tile_size)
 
         self.time = 0
